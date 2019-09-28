@@ -3,6 +3,8 @@ package view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
@@ -49,28 +51,28 @@ public class Controller {
 
 	}
 	
-//	private void showItem(Stage mainStage) {                
-//	      Alert alert = 
-//	         new Alert(AlertType.INFORMATION);
-//	      //alert.initModality(Modality.NONE);
-//	      alert.initOwner(mainStage);
-//	      alert.setTitle("List Item");
-//	      alert.setHeaderText(
-//	           "Selected list item properties");
-//
-//	      String content = "Index: " + 
-//	          listView.getSelectionModel()
-//	                   .getSelectedIndex() + 
-//	          "\nValue: " + 
-//	          listView.getSelectionModel()
-//	                   .getSelectedItem();
-//
-//	          alert.setContentText(content);
-//	          alert.showAndWait();
-//	          // alert.show();  
-//	          //System.out.println("hey there!");
-//	          
-//	   }
+	private void showItem(Stage mainStage) {                
+	      Alert alert = 
+	         new Alert(AlertType.INFORMATION);
+	      //alert.initModality(Modality.NONE);
+	      alert.initOwner(mainStage);
+	      alert.setTitle("List Item");
+	      alert.setHeaderText(
+	           "Selected list item properties");
+
+	      String content = "Index: " + 
+	          listView.getSelectionModel()
+	                   .getSelectedIndex() + 
+	          "\nValue: " + 
+	          listView.getSelectionModel()
+	                   .getSelectedItem();
+
+	          alert.setContentText(content);
+	          alert.showAndWait();
+	          // alert.show();  
+	          //System.out.println("hey there!");
+	          
+	   }
 	
 	private void showItemInputDialog(Stage mainStage) {                
 	      //String item = listView.getSelectionModel().getSelectedItem();
