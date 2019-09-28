@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
 	
@@ -33,28 +34,28 @@
                <children>
          	      	
             	      	<Text fill="#909090" text="Title" />
-                  <Text text="ThisSong" translateX="20.0" />
+                  <Label fx:id="thisTitle" translateX="20.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
          	      	
             	      	<Text fill="#909090" text="Artist" />
-                  <Text text="ThisArtist" translateX="15.0" />
+                  <Label fx:id="thisArtist" translateX="15.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
          	      	
             	      	<Text fill="#909090" text="Album" />
-                  <Text text="ThisAlbum" translateX="8.0" />
+                  <Label fx:id="thisAlbum" translateX="8.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
          	      	
             	      	<Text fill="#909090" text="Year" />
-                  <Text text="ThisYear" translateX="20.0" />
+                  <Label fx:id="thisYear" translateX="20.0" />
                </children>
             </HBox>
             <Text text="Edit Song Details">
@@ -68,25 +69,25 @@
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Title" />
-                  <TextField promptText="ThisSong" translateX="20.0" />
+                  <TextField fx:id="editTitle" promptText="ThisSong" translateX="20.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Artist" />
-                  <TextField promptText="ThisArtist" translateX="14.0" />
+                  <TextField fx:id="editArtist" promptText="ThisArtist" translateX="14.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Album" />
-                  <TextField promptText="ThisAlbum" translateX="7.0" />
+                  <TextField fx:id="editAlbum" promptText="ThisAlbum" translateX="7.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Year" />
-                  <TextField promptText="ThisYear" translateX="19.0" />
+                  <TextField fx:id="editYear" promptText="ThisYear" translateX="19.0" />
                </children>
             </HBox>
             <Button mnemonicParsing="false" text="Save Edits" translateX="137.0">
@@ -94,6 +95,7 @@
                   <Insets top="5.0" />
                </VBox.margin>
             </Button>
+            
             <Text text="Add a New Song">
                <effect>
                   <Glow />

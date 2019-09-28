@@ -8,9 +8,6 @@ import javafx.stage.Stage;
 import view.Controller;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-
 
 public class SongLib extends Application {
 	@Override
