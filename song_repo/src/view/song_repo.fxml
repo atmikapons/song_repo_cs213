@@ -58,7 +58,7 @@
                   <Label fx:id="thisYear" translateX="20.0" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Delete This Song" translateX="50.0" />
+            <Button fx:id="delete" onAction="#deleteSong" mnemonicParsing="false" text="Delete This Song" translateX="50.0" />
             <Text text="Edit Song Details">
                <effect>
                   <Glow />
@@ -91,7 +91,7 @@
                   <TextField fx:id="editYear" promptText="ThisYear" translateX="19.0" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Save Edits" translateX="70.0">
+            <Button fx:id="saveEdits" onAction="#editSong" mnemonicParsing="false" text="Save Edits" translateX="70.0">
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
@@ -108,28 +108,28 @@
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Title" />
-                  <TextField promptText="ThisSong" translateX="20.0" />
+                  <TextField fx:id="addTitle" promptText="ThisSong" translateX="20.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Artist" />
-                  <TextField promptText="ThisArtist" translateX="14.0" />
+                  <TextField fx:id="addArtist" promptText="ThisArtist" translateX="14.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Album" />
-                  <TextField promptText="ThisAlbum" translateX="7.0" />
+                  <TextField fx:id="addAlbum" promptText="ThisAlbum" translateX="7.0" />
                </children>
             </HBox>
             <HBox prefHeight="1.0" prefWidth="200.0" translateX="15.0">
                <children>
                   <Text fill="#909090" text="Year" />
-                  <TextField promptText="ThisYear" translateX="19.0" />
+                  <TextField fx:id="addYear" promptText="ThisYear" translateX="19.0" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Add Song" translateX="70.0">
+            <Button fx:id="add" onAction="#addSong" mnemonicParsing="false" text="Add Song" translateX="70.0">
                <VBox.margin>
                   <Insets bottom="15.0" top="5.0" />
                </VBox.margin>

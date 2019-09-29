@@ -7,7 +7,9 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -23,6 +25,13 @@ public class Controller {
 	@FXML	TextField editArtist;
 	@FXML	TextField editAlbum;
 	@FXML	TextField editYear;
+	@FXML	TextField addTitle;
+	@FXML	TextField addArtist;
+	@FXML	TextField addAlbum;
+	@FXML	TextField addYear;
+	@FXML	Button add;
+	@FXML	Button delete;
+	@FXML	Button saveEdits;
 	
 	//obsList can only hold Strings, since listView
 	//is only capable of displaying Strings.
@@ -86,7 +95,49 @@ public class Controller {
 	      mainStage.show();
 	   }
 	
-	public class Song {
+	public void addSong(ActionEvent e) {
+		Button b = (Button)e.getSource();
+		
+		// get song details entered by user in addTitle, addArtist, etc
+		// if addTitle || addArtist are empty throw error dialogue
+		
+		// else {		
+			if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
+				// add song into songList and obsList, in sorted order
+			}
+			else {
+				// throw error dialogue
+			}
+		// }			
+	}
+	
+	public void editSong(ActionEvent e) {
+		Button b = (Button)e.getSource();
+		
+		if(!duplicateSong(editTitle.getText(), editArtist.getText())) {
+			// get selectedIndex and go that song in songList
+			// edit details to match entered fields
+			// if title || artist changed, replace current string in obsList with new toString()
+		}
+		else {
+			// throw error dialogue
+		}			
+	}
+		
+	/**
+	 * Checks whether or not the song is already contained in songList
+	 * @return false if unique song/artist combo does not exist in songList 
+	 */
+	private boolean duplicateSong(String title, String artist) {
+		return false;
+	}
+	
+	public void deleteSong(ActionEvent e) {
+		Button b = (Button)e.getSource();
+	}
+	
+	
+	private class Song {
 		private String title;
 		private String artist;
 		private String album;
