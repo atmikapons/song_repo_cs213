@@ -185,6 +185,24 @@ public class Controller {
 
 	public void deleteSong(ActionEvent e) {
 		Button b = (Button)e.getSource();
+		
+
+		
+		int index = listView.getSelectionModel().getSelectedIndex();
+		
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		 
+		alert.setTitle("Delete Song");
+		alert.setHeaderText("Are you sure you want to delete this song?");
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+		    // ... user chose OK
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+		}
+		
+	
 	}
 	
 	//song lives here
