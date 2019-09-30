@@ -158,7 +158,7 @@ public class Controller {
 			Alert cantEdit = new Alert(AlertType.ERROR, "This song already exists", ButtonType.CANCEL);
 			alert.showAndWait;
 		}
-
+   
 
 	}
 
