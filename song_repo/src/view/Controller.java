@@ -199,7 +199,7 @@ public class Controller {
 			this.album = album;
 			this.year = year;
 		}
-		public String getTitle() {
+		public String getTitle() {  
 			return title;
 		}
 		public void setTitle(String title) {
