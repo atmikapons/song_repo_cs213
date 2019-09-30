@@ -1,7 +1,6 @@
 package view;
 
 import javafx.scene.control.TextField;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class Controller {
 	@FXML	Button add;
 	@FXML	Button delete;
 	@FXML	Button saveEdits;
-	
+
 	//obsList can only hold Strings, since listView
 	//is only capable of displaying Strings.
 	//songList exists to keep track of all other song details
@@ -42,107 +41,157 @@ public class Controller {
 	private List<Song> songList = new ArrayList<Song>();
 
 	public void start(Stage mainStage) {                
-	
+
 		// a separate method to populate obsList
 		// so that obsList can eventually be created from a text file
 		populateObsList();
-		
+
 		listView.setItems(obsList); 
-		
+
 		// select the first item by default
-	      listView.getSelectionModel().select(0);
-	      updateSelectedSongDetails(mainStage);
-	      
-	      // sets listener - when item is selected, update corresponding text fields
-	      listView
-	        .getSelectionModel()
-	        .selectedIndexProperty()
-	        .addListener(
-	           (obs, oldVal, newVal) -> 
-	               updateSelectedSongDetails(mainStage));
+		listView.getSelectionModel().select(0);
+		updateSelectedSongDetails(mainStage);
+
+		// sets listener - when item is selected, update corresponding text fields
+		listView
+		.getSelectionModel()
+		.selectedIndexProperty()
+		.addListener(
+				(obs, oldVal, newVal) -> 
+				updateSelectedSongDetails(mainStage));
 
 	}
-	
+
 	private void populateObsList() {
 		songList.add(new Song("CoolSong", "Atmika", "potato", "2019"));
 		songList.add(new Song("CoolSong2", "Atmika2", "potato", "2019"));
-		
+
 		// make sure songs in songList are sorted before adding to obsList!
-		
+
 		List<String> songTitles = new ArrayList<String>();
 		for(Song s : songList) {
 			songTitles.add(s.toString());
 		}
-		
+
 		obsList = FXCollections.observableArrayList(songTitles); 
 	}
-	
+
 	private void updateSelectedSongDetails(Stage mainStage) {                
-	      int index = listView.getSelectionModel().getSelectedIndex();
-	      
-	    //set texts in Song Details Box equal to fields of selected song
-	      thisTitle.setText(songList.get(index).getTitle());
-	      thisArtist.setText(songList.get(index).getArtist());
-	      thisAlbum.setText(songList.get(index).getAlbum());
-	      thisYear.setText(songList.get(index).getYear());
-	      
-	    //set texts fields in Edit Details Box equal to fields of selected song  
-	      editTitle.setText(songList.get(index).getTitle());
-	      editArtist.setText(songList.get(index).getArtist());
-	      editAlbum.setText(songList.get(index).getAlbum());
-	      editYear.setText(songList.get(index).getYear());
-	      
-	      mainStage.show();
-	   }
-	
+		int index = listView.getSelectionModel().getSelectedIndex();
+
+		//set texts in Song Details Box equal to fields of selected song
+		thisTitle.setText(songList.get(index).getTitle());
+		thisArtist.setText(songList.get(index).getArtist());
+		thisAlbum.setText(songList.get(index).getAlbum());
+		thisYear.setText(songList.get(index).getYear());
+
+		//set texts fields in Edit Details Box equal to fields of selected song  
+		editTitle.setText(songList.get(index).getTitle());
+		editArtist.setText(songList.get(index).getArtist());
+		editAlbum.setText(songList.get(index).getAlbum());
+		editYear.setText(songList.get(index).getYear());
+
+		mainStage.show();
+	}
+
 	public void addSong(ActionEvent e) {
 		Button b = (Button)e.getSource();
-		
+
 		// get song details entered by user in addTitle, addArtist, etc
 		// if addTitle || addArtist are empty throw error dialogue
-		
+
+
 		// else {		
-			if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
-				// add song into songList and obsList, in sorted order
-			}
-			else {
-				// throw error dialogue
-			}
-		// }			
-	}
-	
-	public void editSong(ActionEvent e) {
-		Button b = (Button)e.getSource();
-		
-		if(!duplicateSong(editTitle.getText(), editArtist.getText())) {
-			// get selectedIndex and go that song in songList
-			// edit details to match entered fields
-			// if title || artist changed, replace current string in obsList with new toString()
+		if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
+			// add song into songList and obsList, in sorted order
+			Song added = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getYear());
+			//add song into songList and sort 
+			songList.add(added);
+			//sort 
+			//update obsList 
+
 		}
 		else {
-			// throw error dialogue
-		}			
+			// throw error dialogue 
+			Alert songExists = new Alert(AlertType.ERROR, "Song already exists", ButtonType.CANCEL);
+			alert.showAndWait();
+
+		}
+
+
+		//sort list after adding
+		songList.sort(Song.toString()); 
+
 	}
-		
+
+	public void editSong(ActionEvent e) {
+		Button b = (Button)e.getSource();
+
+
+		int index = listView.getSelectionModel().getSelectedIndex();
+		if(editTitle.getText().equalsIgnoreCase(songList.get(index).getTitle())&& editArtist.getText().equalsIgnoreCase(songList.get(index).getArtist()){
+			songList[index].album = editAlbum.getText();
+			songList[index].year = editYear.getText();
+
+
+
+		}
+		else if(!duplicateSong(editTitle.getText(), editArtist.getText())) {		
+
+
+
+			// edit details to match entered fields
+			String oldArtist = songList[index].artist.toString();
+			String oldTitle = songList[index].title.toString();
+			songList[index].artist = editTitle.getText();
+			songList[index].title = editArtist.getText();
+			songList[index].album = editAlbum.getText();
+			songList[index].year = editYear.getText();
+			// if title || artist changed, replace current string in obsList with new toString()
+			if(oldArtist.equalsIgnoreCase(editArtist.getText()) && oldTitle.equalsIgnoreCase(editArtst.getText())){
+				// how to populate/update list
+			}
+		}
+
+		else {
+			// throw error dialogue
+			Alert cantEdit = new Alert(AlertType.ERROR, "This song already exists", ButtonType.CANCEL);
+			alert.showAndWait;
+		}
+
+
+	}
+
 	/**
 	 * Checks whether or not the song is already contained in songList
 	 * @return false if unique song/artist combo does not exist in songList 
 	 */
 	private boolean duplicateSong(String title, String artist) {
+		//check every song in list 	
+		for (int index = 0; index < songList.length; index++) {
+			//compare title
+			String currTitle = songList(index).title;
+			//compare artist
+			String currArtist = songList(index).artist;
+			//if both same, then don't add 
+			if (currTitle.equalsIgnoreCase(title) && currArtist.equalsIgnoreCase(artist)) {
+				return true;
+			}			
+		}
 		return false;
 	}
-	
+
 	public void deleteSong(ActionEvent e) {
 		Button b = (Button)e.getSource();
 	}
-	
-	
+
+	//song lives here
 	private class Song {
 		private String title;
 		private String artist;
 		private String album;
 		private String year;
-		
+
 		public Song(String title, String artist, String album, String year) {
 			super();
 			this.title = title;
@@ -174,12 +223,12 @@ public class Controller {
 		public void setYear(String year) {
 			this.year = year;
 		}
-		
+
 		public String toString() {
 			return title + " - " + artist;
 		}
-		
-		
+
+
 	}
 
 
