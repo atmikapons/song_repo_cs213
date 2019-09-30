@@ -3,6 +3,7 @@ package view;
 import javafx.scene.control.TextField;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -102,14 +104,14 @@ public class Controller {
 
 		// get song details entered by user in addTitle, addArtist, etc
 		// if addTitle || addArtist are empty throw error dialogue
-
-
-		// else {		
-		if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
+		if(addTitle.getText().isBlank() || addArtist.getText().isBlank()) {
+			//throw error
+		}
+		else if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
 			// add song into songList and obsList, in sorted order
-			Song added = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText());
+			Song newSong = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText());
 			//add song into songList and sort 
-			songList.add(added);
+			songList.add(newSong);
 			//sort 
 			//update obsList 
 
@@ -184,7 +186,7 @@ public class Controller {
 	public void deleteSong(ActionEvent e) {
 		Button b = (Button)e.getSource();
 	}
-
+	
 	//song lives here
 	private class Song {
 		private String title;
