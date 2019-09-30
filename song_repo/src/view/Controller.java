@@ -225,7 +225,7 @@ public class Controller {
 		}
 
 		public String toString() {
-			return title + " - " + artist;
+			return title + " - " + artist;    
 		}
 
 
