@@ -8,7 +8,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -104,7 +107,7 @@ public class Controller {
 		// else {		
 		if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
 			// add song into songList and obsList, in sorted order
-			Song added = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getYear());
+			Song added = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText());
 			//add song into songList and sort 
 			songList.add(added);
 			//sort 
@@ -114,13 +117,13 @@ public class Controller {
 		else {
 			// throw error dialogue 
 			Alert songExists = new Alert(AlertType.ERROR, "Song already exists", ButtonType.CANCEL);
-			alert.showAndWait();
+			songExists.showAndWait();
 
 		}
 
 
 		//sort list after adding
-		songList.sort(Song.toString()); 
+		//songList.sort(Song.getTitle()); 
 
 	}
 
@@ -129,26 +132,23 @@ public class Controller {
 
 
 		int index = listView.getSelectionModel().getSelectedIndex();
-		if(editTitle.getText().equalsIgnoreCase(songList.get(index).getTitle())&& editArtist.getText().equalsIgnoreCase(songList.get(index).getArtist()){
-			songList[index].album = editAlbum.getText();
-			songList[index].year = editYear.getText();
-
-
-
+		if(editTitle.getText().equalsIgnoreCase(songList.get(index).getTitle()) 
+				&& editArtist.getText().equalsIgnoreCase(songList.get(index).getArtist())) {
+			songList.get(index).setAlbum(editAlbum.getText());
+			songList.get(index).setYear(editYear.getText());
 		}
-		else if(!duplicateSong(editTitle.getText(), editArtist.getText())) {		
-
-
-
+		else if(!duplicateSong(editTitle.getText(), editArtist.getText())) {
 			// edit details to match entered fields
-			String oldArtist = songList[index].artist.toString();
-			String oldTitle = songList[index].title.toString();
-			songList[index].artist = editTitle.getText();
-			songList[index].title = editArtist.getText();
-			songList[index].album = editAlbum.getText();
-			songList[index].year = editYear.getText();
+			String oldArtist = songList.get(index).getArtist();
+			String oldTitle = songList.get(index).getTitle();
+			
+			songList.get(index).setArtist(editArtist.getText());
+			songList.get(index).setTitle(editTitle.getText());
+			songList.get(index).setAlbum(editAlbum.getText());
+			songList.get(index).setYear(editYear.getText());
+			
 			// if title || artist changed, replace current string in obsList with new toString()
-			if(oldArtist.equalsIgnoreCase(editArtist.getText()) && oldTitle.equalsIgnoreCase(editArtst.getText())){
+			if(oldArtist.equalsIgnoreCase(editArtist.getText()) && oldTitle.equalsIgnoreCase(editArtist.getText())){
 				// how to populate/update list
 			}
 		}
@@ -156,7 +156,7 @@ public class Controller {
 		else {
 			// throw error dialogue
 			Alert cantEdit = new Alert(AlertType.ERROR, "This song already exists", ButtonType.CANCEL);
-			alert.showAndWait;
+			cantEdit.showAndWait();
 		}
 
 
@@ -168,11 +168,11 @@ public class Controller {
 	 */
 	private boolean duplicateSong(String title, String artist) {
 		//check every song in list 	
-		for (int index = 0; index < songList.length; index++) {
+		for (int index = 0; index < songList.size(); index++) {
 			//compare title
-			String currTitle = songList(index).title;
+			String currTitle = songList.get(index).getTitle();
 			//compare artist
-			String currArtist = songList(index).artist;
+			String currArtist = songList.get(index).getArtist();
 			//if both same, then don't add 
 			if (currTitle.equalsIgnoreCase(title) && currArtist.equalsIgnoreCase(artist)) {
 				return true;
@@ -193,7 +193,6 @@ public class Controller {
 		private String year;
 
 		public Song(String title, String artist, String album, String year) {
-			super();
 			this.title = title;
 			this.artist = artist;
 			this.album = album;
