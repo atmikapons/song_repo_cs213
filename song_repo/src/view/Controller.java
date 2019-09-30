@@ -180,6 +180,21 @@ public class Controller {
 		}
 		return false;
 	}
+	
+	public int getIndexInsert(String newSongString) {
+		
+		for(int i = 0; i < songList.size(); i++) {
+			int place = songList.get(index).toString().compareToIgnoreCase(newSongString);
+			if (place == -1) {
+				if (i==0) {
+					return 0;
+				} else {
+				return i-1;
+				}
+			} 
+		}
+		return songList.size();
+	}
 
 	public void deleteSong(ActionEvent e) {
 		Button b = (Button)e.getSource();
