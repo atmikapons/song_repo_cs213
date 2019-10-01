@@ -1,10 +1,17 @@
 package view;
 
 import javafx.scene.control.TextField;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,18 +50,21 @@ public class Controller {
 	// in order to make accessing data easy for us!
 	private ObservableList<String> obsList;     
 	private List<Song> songList = new ArrayList<Song>();
-
-	public void start(Stage mainStage) {                
-
-		// a separate method to populate obsList
-		// so that obsList can eventually be created from a text file
-		populateObsList();
-
-		listView.setItems(obsList); 
-
-		// select the first item by default
-		listView.getSelectionModel().select(0);
-		updateSelectedSongDetails(mainStage);
+	Stage mainStage;
+	
+	public void start(Stage mainStage2) throws IOException {                
+		mainStage = mainStage2;
+		
+		File file = new File("src\\view\\songs.csv");
+		if(file.length() != 0) {
+			populateObsList(file);
+			listView.setItems(obsList); 
+			listView.getSelectionModel().select(0);
+			updateSelectedSongDetails(mainStage);
+		} else {
+			obsList = FXCollections.observableArrayList(new ArrayList<String>());
+			listView.setItems(obsList); 
+		}
 
 		// sets listener - when item is selected, update corresponding text fields
 		listView
@@ -63,15 +73,37 @@ public class Controller {
 		.addListener(
 				(obs, oldVal, newVal) -> 
 				updateSelectedSongDetails(mainStage));
-
+	}
+	
+	@FXML
+	public void exitApplication(ActionEvent event) throws IOException {
+		Platform.exit();
+	}
+	
+	public void writeToCsv() throws IOException {
+		FileWriter csvWriter = new FileWriter("src\\view\\songs.csv");
+		for(Song s : songList) {
+			csvWriter.append(s.toStringCsv());
+			System.out.println(s.toStringCsv());
+		}
+		csvWriter.flush();
+		csvWriter.close();	
 	}
 
-	private void populateObsList() {
-		songList.add(new Song("CoolSong", "Atmika", "potato", "2019"));
-		Song n = new Song("CoolSong2", "Atmika2", "potato", "2019");
-		songList.add(getIndexInsert(n.toString()), n);
-
-		// make sure songs in songList are sorted before adding to obsList!
+	private void populateObsList(File file) throws IOException {
+		BufferedReader csvReader = new BufferedReader(new FileReader(file));
+		String row;
+		while ((row = csvReader.readLine()) != null) {
+		    String[] data = row.split(",");
+		    Song newSong;
+		    if(data.length == 2) {
+		    	newSong = new Song(data[0].trim(), data[1].trim(), "", "");
+		    } else {
+		    	newSong = new Song(data[0].trim(), data[1].trim(), data[2].trim(), data[3].trim());
+		    }
+		    songList.add(getIndexInsert(newSong.toString()), newSong);
+		}
+		csvReader.close();
 
 		List<String> songTitles = new ArrayList<String>();
 		for(Song s : songList) {
@@ -81,9 +113,12 @@ public class Controller {
 		obsList = FXCollections.observableArrayList(songTitles); 
 	}
 
-	private void updateSelectedSongDetails(Stage mainStage) {                
+	private void updateSelectedSongDetails(Stage mainStage) {        
+		
 		int index = listView.getSelectionModel().getSelectedIndex();
-
+		if(index == -1) index = 0;
+		System.out.println("listView.getSelectionModel().getSelectedIndex(): " + index);
+		
 		//set texts in Song Details Box equal to fields of selected song
 		thisTitle.setText(songList.get(index).getTitle());
 		thisArtist.setText(songList.get(index).getArtist());
@@ -113,19 +148,18 @@ public class Controller {
 			int insertHere = getIndexInsert(newSong.toString());
 			songList.add(insertHere, newSong);
 			obsList.add(insertHere, newSong.toString());
-
+			listView.getSelectionModel().select(insertHere);
+			addArtist.setText("");
+			addTitle.setText("");
+			addYear.setText("");
+			addAlbum.setText("");
 		}
 		else {
 			// throw error dialogue 
 			Alert songExists = new Alert(AlertType.ERROR, "Song already exists", ButtonType.CANCEL);
 			songExists.showAndWait();
-
 		}
-
-
-		//sort list after adding
-		//songList.sort(Song.toString()); 
-
+		
 	}
 
 	public void editSong(ActionEvent e) {
@@ -136,24 +170,25 @@ public class Controller {
 				&& editArtist.getText().equalsIgnoreCase(songList.get(index).getArtist())){
 			songList.get(index).setAlbum(editAlbum.getText());
 			songList.get(index).setYear(editYear.getText());
+			
 			obsList.set(index, songList.get(index).toString());
+			updateSelectedSongDetails(mainStage);
 		}
 		
 		else if(!duplicateSong(editTitle.getText(), editArtist.getText())) {	
 			
 			// edit details to match entered fields
-			String oldArtist = songList.get(index).getArtist();
-			String oldTitle = songList.get(index).getTitle();
+			//String oldArtist = songList.get(index).getArtist();
+			//String oldTitle = songList.get(index).getTitle();
 			
 			songList.get(index).setArtist(editArtist.getText());
 			songList.get(index).setTitle(editTitle.getText());
 			songList.get(index).setAlbum(editAlbum.getText());
 			songList.get(index).setYear(editYear.getText());
 			
-			// if title || artist changed, replace current string in obsList with new toString()
-			if(oldArtist.equalsIgnoreCase(editArtist.getText()) && oldTitle.equalsIgnoreCase(editArtist.getText())){
-				obsList.set(index, songList.get(index).toString());
-			}
+			obsList.set(index, songList.get(index).toString());
+			listView.getSelectionModel().select(index);
+			updateSelectedSongDetails(mainStage);
 		}
 
 		else {
@@ -184,17 +219,14 @@ public class Controller {
 	
 	public int getIndexInsert(String newSongString) {
 		
+		if(songList.size() == 0) return 0;
 		for(int i = 0; i < songList.size(); i++) {
-			int place = songList.get(i).toString().compareToIgnoreCase(newSongString);
-			if (place == -1) {
-				if (i==0) {
-					return 0;
-				} else {
-				return i-1;
-				}
+			if (newSongString.compareToIgnoreCase(songList.get(i).toString()) < 0) {
+				if(i == 0) return 0;
+				return i;				
 			} 
 		}
-		return songList.size()-1;
+		return songList.size();
 	}
 
 	public void deleteSong(ActionEvent e) {
@@ -211,6 +243,13 @@ public class Controller {
 		   songList.remove(index);
 		   obsList.remove(index);
 		}
+		if(index == obsList.size()) {
+			listView.getSelectionModel().select(index-1);
+		} else if(obsList.isEmpty()) {
+			listView.getSelectionModel().clearSelection();
+		} else {
+			listView.getSelectionModel().select(index);
+		}
 	}
 
 	//song lives here
@@ -224,8 +263,10 @@ public class Controller {
 			super();
 			this.title = title;
 			this.artist = artist;
-			this.album = album;
-			this.year = year;
+			if(album.equals("")) this.album = " ";
+				else this.album = album;
+			if(year.equals("")) this.year = " ";
+					else this.year = year;
 		}
 		public String getTitle() {  
 			return title;
@@ -254,6 +295,14 @@ public class Controller {
 
 		public String toString() {
 			return title + " - " + artist;    
+		}
+		
+		public String toStringCsv() {
+//			if(year.equals("") || album.equals("") || year == null || album == null) {
+//				return title + ", " + artist + "\n";
+//			} else {
+				return title + "," + artist + "," + album + "," + year + "\n";
+			//} 			
 		}
 
    
