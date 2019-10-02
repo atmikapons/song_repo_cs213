@@ -71,8 +71,10 @@ public class Controller {
 		.getSelectionModel()
 		.selectedIndexProperty()
 		.addListener(
-				(obs, oldVal, newVal) -> 
-				updateSelectedSongDetails(mainStage));
+				(obs, oldVal, newVal) -> {
+					updateSelectedSongDetails(mainStage);
+				});
+				
 	}
 	
 	@FXML
@@ -114,24 +116,38 @@ public class Controller {
 	}
 
 	private void updateSelectedSongDetails(Stage mainStage) {        
-		
-		int index = listView.getSelectionModel().getSelectedIndex();
-		if(index == -1) index = 0;
-		System.out.println("listView.getSelectionModel().getSelectedIndex(): " + index);
-		
-		//set texts in Song Details Box equal to fields of selected song
-		thisTitle.setText(songList.get(index).getTitle());
-		thisArtist.setText(songList.get(index).getArtist());
-		thisAlbum.setText(songList.get(index).getAlbum());
-		thisYear.setText(songList.get(index).getYear());
+		if (obsList.size() == 0) {
+			//set texts in Song Details Box equal to fields of selected song
+			thisTitle.setText("");
+			thisArtist.setText("");
+			thisAlbum.setText("");
+			thisYear.setText("");
 
-		//set texts fields in Edit Details Box equal to fields of selected song  
-		editTitle.setText(songList.get(index).getTitle());
-		editArtist.setText(songList.get(index).getArtist());
-		editAlbum.setText(songList.get(index).getAlbum());
-		editYear.setText(songList.get(index).getYear());
+			//set texts fields in Edit Details Box equal to fields of selected song  
+			editTitle.setText("");
+			editArtist.setText("");
+			editAlbum.setText("");
+			editYear.setText("");
 
-		mainStage.show();
+		} else {		
+			int index = listView.getSelectionModel().getSelectedIndex();
+			if(index == -1) index = 0;
+			System.out.println("listView.getSelectionModel().getSelectedIndex(): " + index);
+			
+			//set texts in Song Details Box equal to fields of selected song
+			thisTitle.setText(songList.get(index).getTitle());
+			thisArtist.setText(songList.get(index).getArtist());
+			thisAlbum.setText(songList.get(index).getAlbum());
+			thisYear.setText(songList.get(index).getYear());
+	
+			//set texts fields in Edit Details Box equal to fields of selected song  
+			editTitle.setText(songList.get(index).getTitle());
+			editArtist.setText(songList.get(index).getArtist());
+			editAlbum.setText(songList.get(index).getAlbum());
+			editYear.setText(songList.get(index).getYear());
+	
+			mainStage.show();
+		}
 	}
 
 	public void addSong(ActionEvent e) {
@@ -172,6 +188,7 @@ public class Controller {
 			songList.get(index).setYear(editYear.getText());
 			
 			obsList.set(index, songList.get(index).toString());
+			listView.getSelectionModel().select(index);
 			updateSelectedSongDetails(mainStage);
 		}
 		
@@ -243,7 +260,10 @@ public class Controller {
 		   songList.remove(index);
 		   obsList.remove(index);
 		}
-		if(index == obsList.size()) {
+		
+		if (index == 0) {
+			listView.getSelectionModel().clearSelection();
+		} else if(obsList.get(index).equals(null)) {
 			listView.getSelectionModel().select(index-1);
 		} else if(obsList.isEmpty()) {
 			listView.getSelectionModel().clearSelection();
