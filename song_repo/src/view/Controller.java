@@ -194,17 +194,22 @@ public class Controller {
 		
 		else if(!duplicateSong(editTitle.getText(), editArtist.getText())) {	
 			
-			// edit details to match entered fields
-			//String oldArtist = songList.get(index).getArtist();
-			//String oldTitle = songList.get(index).getTitle();
+//			songList.get(index).setArtist(editArtist.getText());
+//			songList.get(index).setTitle(editTitle.getText());
+//			songList.get(index).setAlbum(editAlbum.getText());
+//			songList.get(index).setYear(editYear.getText());
 			
-			songList.get(index).setArtist(editArtist.getText());
-			songList.get(index).setTitle(editTitle.getText());
-			songList.get(index).setAlbum(editAlbum.getText());
-			songList.get(index).setYear(editYear.getText());
+			//obsList.set(index, songList.get(index).toString());
 			
-			obsList.set(index, songList.get(index).toString());
-			listView.getSelectionModel().select(index);
+			Song thisSong = new Song(editTitle.getText(), editArtist.getText(), editAlbum.getText(), editYear.getText());
+			int newIndex = getIndexInsert(thisSong.toString());
+			songList.add(newIndex, thisSong);
+			obsList.add(newIndex, thisSong.toString());
+			
+			songList.remove(index);
+			obsList.remove(index);
+			
+			listView.getSelectionModel().select(newIndex);
 			updateSelectedSongDetails(mainStage);
 		}
 
@@ -262,7 +267,8 @@ public class Controller {
 		}
 		
 		if (index == 0) {
-			listView.getSelectionModel().clearSelection();
+			if (!obsList.isEmpty()) listView.getSelectionModel().select(index);
+			else listView.getSelectionModel().clearSelection();
 		} else if(obsList.get(index).equals(null)) {
 			listView.getSelectionModel().select(index-1);
 		} else if(obsList.isEmpty()) {
