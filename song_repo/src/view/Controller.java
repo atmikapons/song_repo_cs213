@@ -1,3 +1,7 @@
+/**
+ * authors: Audri Yoon and Atmika Ponnusamy
+ */
+
 package view;
 
 import javafx.scene.control.TextField;

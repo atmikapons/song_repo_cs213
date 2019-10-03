@@ -1,3 +1,7 @@
+/**
+ * authors: Audri Yoon and Atmika Ponnusamy
+ */
+
 package application;
 	
 import java.io.IOException;
