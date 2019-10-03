@@ -160,8 +160,10 @@ public class Controller {
 		// get song details entered by user in addTitle, addArtist, etc
 		// if addTitle || addArtist are empty throw error dialogue
 
-
-		// else {		
+		if(addTitle.getText().isEmpty() || addArtist.getText().isEmpty()) {
+			return;
+		}
+		
 		if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
 			// add song into songList and obsList, in sorted order
 			Song newSong = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText());
