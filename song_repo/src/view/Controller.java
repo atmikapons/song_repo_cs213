@@ -87,7 +87,7 @@ public class Controller {
 	}
 	
 	public void writeToCsv() throws IOException {
-		FileWriter csvWriter = new FileWriter("src\\view\\songs.csv");
+		FileWriter csvWriter = new FileWriter("src" + File.separator + "songs.csv");
 		for(Song s : songList) {
 			csvWriter.append(s.toStringCsv());
 			System.out.println(s.toStringCsv());
@@ -164,66 +164,95 @@ public class Controller {
 			return;
 		}
 		
-		if(!duplicateSong(addTitle.getText(), addArtist.getText())) {
-			// add song into songList and obsList, in sorted order
-			Song newSong = new Song(addTitle.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText());
-			int insertHere = getIndexInsert(newSong.toString());
-			songList.add(insertHere, newSong);
-			obsList.add(insertHere, newSong.toString());
-			listView.getSelectionModel().select(insertHere);
-			addArtist.setText("");
-			addTitle.setText("");
-			addYear.setText("");
-			addAlbum.setText("");
-		}
-		else {
-			// throw error dialogue 
-			Alert songExists = new Alert(AlertType.ERROR, "Song already exists", ButtonType.CANCEL);
-			songExists.showAndWait();
+		if(!addYear.getText().isEmpty()) {
+			try {
+				Integer.parseInt(addYear.getText().trim());
+			} catch (NumberFormatException n) {
+				return;
+			}
 		}
 		
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		 
+		alert.setTitle("Add Song");
+		alert.setHeaderText("Are you sure you want to add this song?");
+		
+		Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK){
+			if(!duplicateSong(addTitle.getText().trim(), addArtist.getText().trim())) {
+				// add song into songList and obsList, in sorted order
+				Song newSong = new Song(addTitle.getText().trim(), addArtist.getText().trim(), addAlbum.getText().trim(), addYear.getText().trim());
+				int insertHere = getIndexInsert(newSong.toString());
+				songList.add(insertHere, newSong);
+				obsList.add(insertHere, newSong.toString());
+				listView.getSelectionModel().select(insertHere);
+				addArtist.setText("");
+				addTitle.setText("");
+				addYear.setText("");
+				addAlbum.setText("");
+			}
+			else {
+				// throw error dialogue 
+				Alert songExists = new Alert(AlertType.ERROR, "Song already exists", ButtonType.CANCEL);
+				songExists.showAndWait();
+			}
+		}
 	}
 
 	public void editSong(ActionEvent e) {
 		Button b = (Button)e.getSource();
 
 		int index = listView.getSelectionModel().getSelectedIndex();
-		if(editTitle.getText().equalsIgnoreCase(songList.get(index).getTitle())
-				&& editArtist.getText().equalsIgnoreCase(songList.get(index).getArtist())){
-			songList.get(index).setAlbum(editAlbum.getText());
-			songList.get(index).setYear(editYear.getText());
-			
-			obsList.set(index, songList.get(index).toString());
-			listView.getSelectionModel().select(index);
-			updateSelectedSongDetails(mainStage);
+		if(index == -1) return;
+		
+		if(editTitle.getText().isEmpty() || editTitle.getText().isEmpty()) {
+			return;
 		}
 		
-		else if(!duplicateSong(editTitle.getText(), editArtist.getText())) {	
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		 
+		alert.setTitle("Edit Song");
+		alert.setHeaderText("Are you sure you want to edit this song?");
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
 			
-//			songList.get(index).setArtist(editArtist.getText());
-//			songList.get(index).setTitle(editTitle.getText());
-//			songList.get(index).setAlbum(editAlbum.getText());
-//			songList.get(index).setYear(editYear.getText());
+			if(editTitle.getText().equalsIgnoreCase(songList.get(index).getTitle().trim())
+					&& editArtist.getText().equalsIgnoreCase(songList.get(index).getArtist().trim())){
+				songList.get(index).setAlbum(editAlbum.getText().trim());
+				songList.get(index).setYear(editYear.getText().trim());
+				
+				obsList.set(index, songList.get(index).toString());
+				listView.getSelectionModel().select(index);
+				updateSelectedSongDetails(mainStage);
+			}
 			
-			//obsList.set(index, songList.get(index).toString());
-			
-			Song thisSong = new Song(editTitle.getText(), editArtist.getText(), editAlbum.getText(), editYear.getText());
-			int newIndex = getIndexInsert(thisSong.toString());
-			songList.add(newIndex, thisSong);
-			obsList.add(newIndex, thisSong.toString());
-			
-			songList.remove(index);
-			obsList.remove(index);
-			
-			listView.getSelectionModel().select(newIndex);
-			updateSelectedSongDetails(mainStage);
-		}
-
-		else {
-			// throw error dialogue
-			Alert cantEdit = new Alert(AlertType.ERROR, "This song already exists", ButtonType.CANCEL);
-			cantEdit.showAndWait();
-		}
+			else if(!duplicateSong(editTitle.getText().trim(), editArtist.getText().trim())) {	
+				
+				Song thisSong = new Song(editTitle.getText().trim(), editArtist.getText().trim(), editAlbum.getText().trim(), editYear.getText().trim());
+				int newIndex = getIndexInsert(thisSong.toString());
+				
+				if(newIndex == index) {
+					songList.set(index, thisSong);
+					obsList.set(index, thisSong.toString());
+				} else {
+					songList.add(newIndex, thisSong);
+					obsList.add(newIndex, thisSong.toString());
+					
+					songList.remove(index);
+					obsList.remove(index);
+				}			
+				listView.getSelectionModel().select(newIndex);
+				updateSelectedSongDetails(mainStage);
+		
+			}
+			else {
+				// throw error dialogue
+				Alert cantEdit = new Alert(AlertType.ERROR, "This song already exists", ButtonType.CANCEL);
+				cantEdit.showAndWait();
+			}
+		}	
+		
 	}
 
 	/**
@@ -261,6 +290,8 @@ public class Controller {
 		Button b = (Button)e.getSource();
 		int index = listView.getSelectionModel().getSelectedIndex();
 		
+		if(index == -1) return;
+		
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		 
 		alert.setTitle("Delete Song");
@@ -273,9 +304,12 @@ public class Controller {
 		}
 		
 		if (index == 0) {
-			if (!obsList.isEmpty()) listView.getSelectionModel().select(index);
+			if (!obsList.isEmpty()) {
+				listView.getSelectionModel().select(index);
+				updateSelectedSongDetails(mainStage);
+			}
 			else listView.getSelectionModel().clearSelection();
-		} else if(obsList.get(index).equals(null)) {
+		} else if(index == obsList.size()) {
 			listView.getSelectionModel().select(index-1);
 		} else if(obsList.isEmpty()) {
 			listView.getSelectionModel().clearSelection();
