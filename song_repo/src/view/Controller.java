@@ -59,7 +59,7 @@ public class Controller {
 	public void start(Stage mainStage2) throws IOException {                
 		mainStage = mainStage2;
 		
-		File file = new File("src\\view\\songs.csv");
+		File file = new File("src" + File.separator + "songs.csv");
 		if(file.length() != 0) {
 			populateObsList(file);
 			listView.setItems(obsList); 
