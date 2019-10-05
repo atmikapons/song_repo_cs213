@@ -88,6 +88,7 @@ public class Controller {
 	
 	public void writeToCsv() throws IOException {
 		FileWriter csvWriter = new FileWriter("src" + File.separator + "songs.csv");
+//		FileWriter csvWriter = new FileWriter("src//songs.csv");
 		for(Song s : songList) {
 			csvWriter.append(s.toStringCsv());
 			System.out.println(s.toStringCsv());
